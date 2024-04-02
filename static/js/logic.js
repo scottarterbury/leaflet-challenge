@@ -1,21 +1,21 @@
-// Store our API endpoint as queryUrl.
+// Store API endpoint as queryUrl.
 let queryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
 
-// Perform a GET request to the query URL.
+// Perform GET request URL.
 d3.json(queryUrl).then(function (data) {
   createFeatures(data.features);
 });
 
 function createFeatures(earthquakeData) {
 
-  // Define a function that we want to run once for each feature in the features array.
-  // Give each feature a popup that describes the place and time of the earthquake.
+  // Define a function to run once for each feature array.
+  // Give features a popup that describes the time and place of the earthquake.
   function onEachFeature(feature, layer) {
     layer.bindPopup(`<h3>${feature.properties.place}</h3><hr><p>${new Date(feature.properties.time)}</p>`);
   }
 
-  // Create a GeoJSON layer that contains the features array on the earthquakeData object.
-  // Run the onEachFeature function once for each piece of data in the array.
+  // Create a GeoJSON layer that contains the features array on the earthquakeData.
+  // Run the onEachFeature function once for each data in the array.
   let earthquakes = L.geoJSON(earthquakeData, {
     pointToLayer: function (feature, latlng) {
       return L.circleMarker(latlng, {
@@ -30,11 +30,11 @@ function createFeatures(earthquakeData) {
     onEachFeature: onEachFeature
   });
 
- // Send the earthquakes layer to the createMap function.
+ // Push the earthquakes layer to the createMap function.
  createMap(earthquakes);
 }
 
-  // determining size of circle 
+  // Circle Size
   function getCircleSize(magnitude) {
       let size;
       if (magnitude < 1) {
@@ -53,7 +53,7 @@ function createFeatures(earthquakeData) {
       return size
   }
 
-  // determining color of circle
+  // Circle Color
   function getCircleColor(depth) {
     let color;
     console.log(depth)
@@ -84,18 +84,18 @@ function createMap(earthquakes) {
     attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
   });
 
-  // Create a baseMaps object.
+  // Create a baseMaps.
   let baseMaps = {
     "Street Map": street,
     "Topographic Map": topo
   };
 
-  // Create an overlay object to hold our overlay.
+  // Create overlay object.
   let overlayMaps = {
     Earthquakes: earthquakes
   };
 
-  // Create our map, giving it the streetmap and earthquakes layers to display on load.
+  // Create map, assigning the streetmap and earthquakes layers to display.
   let myMap = L.map("map", {
     center: [
       37.09, -95.71
@@ -105,13 +105,13 @@ function createMap(earthquakes) {
   });
 
   // Create a layer control.
-  // Pass it our baseMaps and overlayMaps.
-  // Add the layer control to the map.
+  // Send to baseMaps and overlayMaps.
+  // Add layer control to the map.
   L.control.layers(baseMaps, overlayMaps, {
     collapsed: false
   }).addTo(myMap);
 
-  // Set up the legend.
+  // Set up legend.
   let legend = L.control({ position: "bottomright" });
   legend.onAdd = function() {
     let div = L.DomUtil.create("div", "legend");
@@ -130,6 +130,6 @@ function createMap(earthquakes) {
     return div;
   };
 
-  // Adding the legend to the map
+  // Adding legend to the map
   legend.addTo(myMap);
 }
